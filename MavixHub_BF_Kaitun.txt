@@ -35,63 +35,54 @@ elseif game.PlaceId == 4442272183 then
 elseif game.PlaceId == 7449423635 then
     World3 = true
 end
--- MavixHub_BF_Kaitun.txt đã chỉnh sửa: Farm toàn bộ quái Sky 3 từ lv 1 đến 299 không nhận nhiệm vụ
--- Từ lv 300 trở lên farm theo quest bình thường
+_G.AutoFarm = true
 
--- Cập nhật farm theo level
-spawn(function()
-    while wait(1) do
-        pcall(function()
-            CheckQuest()
-        end)
-    end
-end)
-
--- Hàm kiểm tra level và farm Sky 3 hoặc theo quest
-local function CheckQuest() 
+-- Hàm kiểm tra level và chọn quái để farm không cần nhiệm vụ
+function CheckQuest()
     local MyLevel = game.Players.LocalPlayer.Data.Level.Value
 
-    -- Farm Sky 3 từ lv 1 đến 299, không nhận nhiệm vụ
     if MyLevel >= 1 and MyLevel < 300 then
         MonList = {"Shanda", "God's Guard", "Royal Squad", "Royal Soldier"}
         _G.FarmSky3 = true
-        -- Teleport lên Sky 3 nếu ở xa
+        _G.FarmOther = false
+
         local sky3pos = Vector3.new(-7894.6177, 5547.1416, -380.2911)
         if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - sky3pos).Magnitude > 1000 then
             game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("requestEntrance", sky3pos)
         end
-    else
+    elseif MyLevel >= 300 and MyLevel <= 324 then
+        MonList = {"Military Soldier"}
         _G.FarmSky3 = false
-        -- Farm nhận nhiệm vụ theo level bình thường (ví dụ từ lv 300)
-        if MyLevel >= 300 and MyLevel <= 324 then
-            Mon = "Military Soldier"
-            LevelQuest = 1
-            NameQuest = "MagmaQuest"
-            NameMon = "Military Soldier"
-            CFrameQuest = CFrame.new(-5313.37012, 10.9500084, 8515.29395)
-            CFrameMon = CFrame.new(-5411.1646, 11.081554, 8454.293)
-        elseif MyLevel >= 325 and MyLevel <= 374 then
-            Mon = "Military Spy"
-            LevelQuest = 2
-            NameQuest = "MagmaQuest"
-            NameMon = "Military Spy"
-            CFrameQuest = CFrame.new(-5313.37012, 10.9500084, 8515.29395)
-            CFrameMon = CFrame.new(-5802.8681, 86.262413, 8828.8593)
-        end
-        -- Các điều kiện quest khác giữ nguyên...
+        _G.FarmOther = true
+    elseif MyLevel >= 325 and MyLevel <= 374 then
+        MonList = {"Military Spy"}
+        _G.FarmSky3 = false
+        _G.FarmOther = true
     end
+    -- Thêm các quái theo level tại đây...
 end
 
--- Farm Sky 3 không nhiệm vụ
+-- Luôn cập nhật quái cần farm
+spawn(function()
+    while wait(1) do
+        if _G.AutoFarm then
+            pcall(function()
+                CheckQuest()
+            end)
+        end
+    end
+end)
+
+-- Farm không nhiệm vụ
 spawn(function()
     while wait() do
-        if _G.FarmSky3 then
+        if _G.AutoFarm then
             pcall(function()
                 for i, v in pairs(game.Workspace.Enemies:GetChildren()) do
                     if table.find(MonList, v.Name) and v.Humanoid.Health > 0 then
                         repeat wait()
                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 10, 0)
-                        until v.Humanoid.Health <= 0 or not _G.FarmSky3
+                        until v.Humanoid.Health <= 0 or not _G.AutoFarm
                     end
                 end
             end)
