@@ -42,14 +42,16 @@ local function CheckQuest()
     if MyLevel >= 1 and MyLevel < 300 then
         Mon = "Shanda"
         NameMon = "Shanda"
-        CFrameMon = CFrame.new(-7678.4897, 5566.4038, -497.2156) -- Vị trí quái Shanda
-        CFrameQuest = CFrameMon -- Gán để bot bay tới
-
-        -- Dịch chuyển lên Sky 3 nếu đang ở xa
-        if _G.AutoFarm and (CFrameMon.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude > 1000 then
+        CFrameMon = CFrame.new(-7678.4897, 5566.4038, -497.2156)
+        CFrameQuest = CFrameMon
+        _G.FarmSky3 = true -- Kích hoạt farm Sky 3
+        -- Dịch chuyển lên Sky 3 nếu xa
+        if (CFrameMon.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude > 1000 then
             game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-7894.6177, 5547.1416, -380.2911))
         end
         return
+    else
+        _G.FarmSky3 = false -- Không farm Sky 3 nữa
     end
     
     -- Các điều kiện farm bình thường bên dưới (giữ nguyên)
