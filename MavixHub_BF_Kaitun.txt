@@ -35,24 +35,46 @@ elseif game.PlaceId == 4442272183 then
 elseif game.PlaceId == 7449423635 then
     World3 = true
 end
+-- MavixHub_BF_Kaitun.txt đã chỉnh sửa: Farm toàn bộ quái Sky 3 từ lv 1 đến 299 không nhận nhiệm vụ
+-- Từ lv 300 trở lên farm theo quest bình thường
+
 local function CheckQuest() 
     MyLevel = game:GetService("Players").LocalPlayer.Data.Level.Value
 
-    -- Farm Sky 3 (Shanda - boss Enel) từ level 1 đến 299 không nhận nhiệm vụ
+    -- Farm toàn bộ quái Sky 3 từ level 1 đến 299, không nhận nhiệm vụ
     if MyLevel >= 1 and MyLevel < 300 then
-        Mon = "Shanda"
-        NameMon = "Shanda"
-        CFrameMon = CFrame.new(-7678.4897, 5566.4038, -497.2156)
-        CFrameQuest = CFrameMon
-        _G.FarmSky3 = true -- Kích hoạt farm Sky 3
-        -- Dịch chuyển lên Sky 3 nếu xa
-        if (CFrameMon.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude > 1000 then
+        MonList = {"Shanda", "God's Guard", "Royal Squad", "Royal Soldier"}
+        _G.FarmSky3 = true
+        -- Teleport lên Sky 3 nếu ở xa
+        if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(-7894.6177, 5547.1416, -380.2911)).Magnitude > 1000 then
             game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-7894.6177, 5547.1416, -380.2911))
         end
         return
     else
-        _G.FarmSky3 = false -- Không farm Sky 3 nữa
+        _G.FarmSky3 = false
     end
+
+    -- Các điều kiện farm bình thường giữ nguyên ...
+end
+
+-- Farm tất cả quái Sky 3 từ lv 1-299 không nhiệm vụ
+spawn(function()
+    while wait() do
+        if _G.FarmSky3 then
+            pcall(function()
+                for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                    if table.find(MonList, v.Name) and v.Humanoid.Health > 0 then
+                        repeat wait()
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,10,0)
+                            -- Fast Attack sẽ tự đánh
+                        until v.Humanoid.Health <= 0 or not _G.FarmSky3
+                    end
+                end
+            end)
+        end
+    end
+end)
+
     
     -- Các điều kiện farm bình thường bên dưới (giữ nguyên)
     if World1 then
