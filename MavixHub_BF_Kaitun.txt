@@ -38,11 +38,17 @@ end
 local function CheckQuest() 
     MyLevel = game:GetService("Players").LocalPlayer.Data.Level.Value
 
-    -- Farm Sky Island từ level 1 đến 299 không nhận nhiệm vụ
+    -- Farm Sky 3 (God's Guard) từ level 1 đến 299 không nhận nhiệm vụ
     if MyLevel >= 1 and MyLevel < 300 then
-        Mon = "Sky Bandit"
-        NameMon = "Sky Bandit"
-        CFrameMon = CFrame.new(-4953.20703125, 295.74420166015625, -2899.22900390625)
+        Mon = "God's Guard"
+        NameMon = "God's Guard"
+        CFrameMon = CFrame.new(-4710.04296875, 845.2769775390625, -1927.3079833984375)
+        CFrameQuest = CFrameMon -- Để bot bay đến quái
+
+        -- Nếu bạn ở quá xa Sky 3, thì dịch chuyển tới Sky 3
+        if _G.AutoFarm and (CFrameMon.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude > 1000 then
+            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-4607.82275, 872.54248, -1667.55688))
+        end
         return
     end
 
