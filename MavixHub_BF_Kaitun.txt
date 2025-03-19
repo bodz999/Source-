@@ -35,8 +35,6 @@ elseif game.PlaceId == 4442272183 then
 elseif game.PlaceId == 7449423635 then
     World3 = true
 end
-_G.AutoFarm = true
-
 -- Hàm kiểm tra level và chọn quái để farm không cần nhiệm vụ
 function CheckQuest()
     local MyLevel = game.Players.LocalPlayer.Data.Level.Value
@@ -62,34 +60,6 @@ function CheckQuest()
     -- Thêm các quái theo level tại đây...
 end
 
--- Luôn cập nhật quái cần farm
-spawn(function()
-    while wait(1) do
-        if _G.AutoFarm then
-            pcall(function()
-                CheckQuest()
-            end)
-        end
-    end
-end)
-
--- Farm không nhiệm vụ
-spawn(function()
-    while wait() do
-        if _G.AutoFarm then
-            pcall(function()
-                for i, v in pairs(game.Workspace.Enemies:GetChildren()) do
-                    if table.find(MonList, v.Name) and v.Humanoid.Health > 0 then
-                        repeat wait()
-                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 10, 0)
-                        until v.Humanoid.Health <= 0 or not _G.AutoFarm
-                    end
-                end
-            end)
-        end
-    end
-end)
-    
     -- Các điều kiện farm bình thường bên dưới (giữ nguyên)
     if World1 then
         if MyLevel == 1 or MyLevel <= 9 then
