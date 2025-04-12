@@ -2236,7 +2236,7 @@ end)
 LGa:AddButton({
     Title = "Rain Fruit",
     Callback = function()
-        local fruitObjects = game:GetObjects("rbxassetid://14759368201")[1]:GetChildren()
+        local fruitObjects = game:GetObjects("rbxassetid://110892493245840")[1]:GetChildren()
         local maxFruits = 10
         local count = 0
         for i, v in pairs(fruitObjects) do
@@ -7413,7 +7413,7 @@ task.spawn(function()
                             game.StarterGui:SetCore("SendNotification", {
                                 Title = "Taisynex Hub",
                                 Text = "Use! - Yama or Tushita",
-                                con = "rbxassetid://136304028795167",
+                                con = "rbxassetid://110892493245840",
                                 Duration = 10,
                             })
                             hasNotified = true
@@ -8052,7 +8052,7 @@ Button.Parent = ScreenGui
 Button.Size = UDim2.new(0, 50, 0, 50)
 Button.Position = UDim2.new(0.015, 0, 0.02, 20)
 Button.BackgroundTransparency = 1
-Button.Image = "rbxassetid://136304028795167"
+Button.Image = "rbxassetid://110892493245840"
 local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(1, 0)
 UICorner.Parent = Button
